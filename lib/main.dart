@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   var result = await Process.run(
                       'E:\\flutterfiles\\lib\\BatbyProcess.bat', [],
                       runInShell: true);
-                  setState(() => log = result.stdout);
+                  setState(() => log = result.stdout + result.stderr);
                 },
                 child: const Text('BatEventByProcess'),
               ),
@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   var result = await Process.run(
                       'E:\\flutterfiles\\lib\\BatEvent.bat', [],
                       runInShell: true);
-                  setState(() => log = result.stdout);
+                  setState(() => log = result.stdout + result.stderr);
                 },
                 child: const Text('BatEventByTime'),
               ),
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   var result = await Process.run(
                       'E:\\flutterfiles\\lib\\BatEventDelete.bat', [],
                       runInShell: true);
-                  setState(() => log = result.stdout);
+                  setState(() => log = result.stdout + result.stderr);
                 },
                 child: const Text('BatEventDelete'),
               ),
