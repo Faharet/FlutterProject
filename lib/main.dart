@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'dart:io';
 
 void main() {
@@ -12,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'the Salomé Beta v0.1',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'the Salomé Beta v0.1'),
     );
   }
 }
@@ -49,8 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () async {
-                  var result = await Process.run(
-                      'E:\\flutterfiles\\lib\\BatbyProcess.bat', [],
+                  var result = await Process.run('.\\lib\\BatbyProcess.bat', [],
                       runInShell: true);
                   setState(() => log = result.stdout + result.stderr);
                 },
@@ -58,8 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var result = await Process.run(
-                      'E:\\flutterfiles\\lib\\BatEvent.bat', [],
+                  var result = await Process.run('.\\lib\\BatEvent.bat', [],
                       runInShell: true);
                   setState(() => log = result.stdout + result.stderr);
                 },
@@ -68,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () async {
                   var result = await Process.run(
-                      'E:\\flutterfiles\\lib\\BatEventDelete.bat', [],
+                      '.\\lib\\BatEventDelete.bat', [],
                       runInShell: true);
                   setState(() => log = result.stdout + result.stderr);
                 },
@@ -119,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _selectedTimeStart = timeOfDay;
           });
         }
-        const filename = 'E:\\flutterfiles\\lib\\configTimeStart.ini';
+        const filename = '.\\lib\\configTimeStart.ini';
         var file = await File(filename).writeAsString(
             'mytime=${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}');
         break;
@@ -134,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _selectedTimeEnd = timeOfDay;
           });
         }
-        const filename = 'E:\\flutterfiles\\lib\\configTimeEnd.ini';
+        const filename = '.\\lib\\configTimeEnd.ini';
         var file = await File(filename).writeAsString(
             'mytime=${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}');
         break;

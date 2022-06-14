@@ -1,5 +1,5 @@
 @rem Event
-
+chcp 850
 ::Берем значения с конфига
 for /f "tokens=1,2 delims==" %%a in (E:\flutterfiles\lib\configTimeStart.ini) do (
     if %%a==mytime set mytime=%%b

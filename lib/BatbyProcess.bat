@@ -1,5 +1,6 @@
 @rem My First bat
 @echo off
+chcp 850
 ::Берем переменные с конфига
 for /f "tokens=1,2 delims==" %%a in (E:\flutterfiles\lib\config.ini) do (
 	if %%a==processname set processname=%%b
