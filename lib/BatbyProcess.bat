@@ -4,18 +4,25 @@
 for /f "tokens=1,2 delims==" %%a in (E:\flutterfiles\lib\config.ini) do (
 	if %%a==processname set processname=%%b
 )
-:loop 
-	echo %processname%
+set /A a = 1
+:loop
+	if %a%==1 goto On
+	if %a%==2 goto Off
+:On
 	tasklist | find "%processname%"
-	if errorlevel 1 goto NoRecord
+	if errorlevel 1 goto On
 	::Сюда писать то что нужно сделать если есть
-	echo Found
+	set /A a = 2
 	goto Done
-:NoRecord
-	::Сюда писать то что нужно сделать если нету
-	echo Not found
+:Off
+	tasklist | find "%processname%"
+	if errorlevel 1 goto Offin
+	::Сюда писать то что нужно сделать если есть
+	goto Off
+:Offin
+
+	set /A a = 1
 :Done
 goto loop
 ::diskpart /s lis dis
-exit:
-
+:exit
