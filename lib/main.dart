@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'dart:io';
 
 void main() {
@@ -31,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String string = "Change time in ini file";
+  String log = 'This is log file';
   final myController = TextEditingController();
   TimeOfDay _selectedTimeStart = TimeOfDay.now();
   TimeOfDay _selectedTimeEnd = TimeOfDay.now();
@@ -40,49 +42,66 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () async {
-                var result = await Process.run(
-                    'E:\\flutterfiles\\lib\\BatbyProcess.bat', []);
-              },
-              child: const Text('BatEventByProcess'),
+      body: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () async {
+                  var result = await Process.run(
+                      'E:\\flutterfiles\\lib\\BatbyProcess.bat', [],
+                      runInShell: true);
+                  setState(() => log = result.stdout);
+                },
+                child: const Text('BatEventByProcess'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var result = await Process.run(
+                      'E:\\flutterfiles\\lib\\BatEvent.bat', [],
+                      runInShell: true);
+                  setState(() => log = result.stdout);
+                },
+                child: const Text('BatEventByTime'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var result = await Process.run(
+                      'E:\\flutterfiles\\lib\\BatEventDelete.bat', [],
+                      runInShell: true);
+                  setState(() => log = result.stdout);
+                },
+                child: const Text('BatEventDelete'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _selectTime(context, 1);
+                },
+                child: const Text("Choose Start time"),
+              ),
+              Text(
+                  "${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}"),
+              ElevatedButton(
+                onPressed: () {
+                  _selectTime(context, 2);
+                },
+                child: const Text("Choose End time"),
+              ),
+              Text(
+                  "${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}"),
+            ],
+          ),
+          Center(
+            child: Text(
+              log,
+              style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  backgroundColor: Colors.black),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                var result = await Process.run(
-                    'E:\\flutterfiles\\lib\\BatEvent.bat', []);
-              },
-              child: const Text('BatEventByTime'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                var result = await Process.run(
-                    'E:\\flutterfiles\\lib\\BatEventDelete.bat', []);
-              },
-              child: const Text('BatEventDelete'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _selectTime(context, 1);
-              },
-              child: const Text("Choose Start time"),
-            ),
-            Text(
-                "${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}"),
-            ElevatedButton(
-              onPressed: () {
-                _selectTime(context, 2);
-              },
-              child: const Text("Choose End time"),
-            ),
-            Text(
-                "${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}"),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
