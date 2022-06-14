@@ -1,16 +1,23 @@
-# flutterfiles
+#  Salomé Beta V0.1
 
-A new Flutter project.
+ Проект Salomé (Саломея) - обеспечивает возможность контролируемо подключать и отключать локальные, внешние и сетевые диски для защиты бэкапов от чужого вмешательства и программ вымогаталей. 
 
-## Getting Started
+ На данный момент предоставляются следующие возможности включения и отключения дисков:
+  -  По опредленному промежутку времени и даты
+  -  По запуску и отключению определенного процесса
 
-This project is a starting point for a Flutter application.
+ В скором врменеи ожидаются дополнительные возможности:
+  -  Отправка уведомлений на электронную почту
+  -  Передача логов успешного получения в Kafka
+  -  Отправка данных на облако
 
-A few resources to get you started if this is your first Flutter project:
+## Настройка
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+...
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Документация
+
+Проект разработан на Dart/Flutter. 
+В текущей реализации поддерживает ОС: Windows7+. 
+Используются скрипты Batch. 
+
