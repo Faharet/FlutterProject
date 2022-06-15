@@ -77,16 +77,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: const Text("Choose Start time"),
               ),
-              Text(
-                  "${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}"),
+              Text("${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:" +
+                  "${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}"),
               ElevatedButton(
                 onPressed: () {
                   _selectTime(context, 2);
                 },
                 child: const Text("Choose End time"),
               ),
-              Text(
-                  "${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}"),
+              Text("${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:" +
+                  "${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}"),
             ],
           ),
           Center(
