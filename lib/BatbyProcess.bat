@@ -14,6 +14,7 @@ set /A c = 1
 	tasklist | find "%processname%"
 	if errorlevel 1 goto On
 	set /A c = 2
+	diskpart /s DiskpartOn.txt
 	goto Done
 :Off
 	echo Started Off
@@ -22,6 +23,7 @@ set /A c = 1
 	goto Off
 :Offin
 	set /A c = 1
+	diskpart /s DiskpartOff.txt
 :Done
 goto loop
 ::diskpart /s lis dis
