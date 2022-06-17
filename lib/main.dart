@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -30,8 +33,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String string = "Change time in ini file";
   String log = 'This is log file';
+  String logStream = '';
+  var controller;
   final myController = TextEditingController();
   TimeOfDay _selectedTimeStart = TimeOfDay.now();
   TimeOfDay _selectedTimeEnd = TimeOfDay.now();
@@ -48,9 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () async {
-                  var result = await Process.run('.\\lib\\BatbyProcess.bat', [],
+                  var result = await Process.start(
+                      '.\\lib\\BatbyProcess.bat', [],
                       runInShell: true);
-                  setState(() => log = result.stdout + result.stderr);
+                  controller = StreamController<List<int>>();
+                  controller.addStream(result.stdout);
+                  controller.stream.listen((item) =>
+                      setState(() => logStream = String.fromCharCodes(item)));
                 },
                 child: const Text('BatEventByProcess'),
               ),
@@ -98,9 +106,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   backgroundColor: Colors.black),
             ),
           ),
+          Center(
+            child: Text(
+              logStream,
+              style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  backgroundColor: Colors.black),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  myFunc(Stream<List<Int>> std) async {
+    var controller = new StreamController<List<Int>>();
+    controller.addStream(std);
+    controller.stream.listen((item) => log = item as String);
   }
 
   _selectTime(BuildContext context, int i) async {
