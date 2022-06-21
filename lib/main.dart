@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -54,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   var result = await Process.start(
                       '.\\lib\\BatbyProcess.bat', [],
-                      runInShell: true);
+                      runInShell: true, mode: ProcessStartMode.inheritStdio);
                   controller = StreamController<List<int>>();
                   controller.addStream(result.stdout);
                   controller.stream.listen((item) =>

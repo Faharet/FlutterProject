@@ -11,21 +11,18 @@ set /A c = 1
 	if %c%==2 goto Off
 :On
 	echo Started On
-	tasklist | find "%processname%"
+	tasklist | findstr "%processname%"
 	if errorlevel 1 goto On
 	set /A c = 2
-	diskpart /s DiskpartOn.txt
 	goto Done
 :Off
 	echo Started Off
-	tasklist | find "%processname%"
-	if errorlevel 1 goto Offin
+	tasklist | findstr "%processname%"
+	if errorlevel 1 goto exit
 	goto Off
 :Offin
 	set /A c = 1
-	diskpart /s DiskpartOff.txt
 :Done
 goto loop
 ::diskpart /s lis dis
 :exit
-pause
