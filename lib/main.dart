@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'process_monitor.dart' as pm;
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String log = 'This is log file';
   String logStream = '';
-  var controller;
+  final controller = StreamController<List<int>>();
   final myController = TextEditingController();
   TimeOfDay _selectedTimeStart = TimeOfDay.now();
   TimeOfDay _selectedTimeEnd = TimeOfDay.now();
@@ -50,51 +51,15 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ElevatedButton(
-                onPressed: () async {
-                  var result = await Process.start(
-                      '.\\lib\\BatbyProcess.bat', [],
-                      runInShell: true, mode: ProcessStartMode.inheritStdio);
-                  controller = StreamController<List<int>>();
-                  controller.addStream(result.stdout);
-                  controller.stream.listen((item) =>
-                      setState(() => logStream = String.fromCharCodes(item)));
+                onPressed: () {
+                  if(pm.findProc() != 0){
+                    setState(() {
+                      log = "is On";
+                    });
+                  }
                 },
                 child: const Text('BatEventByProcess'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  var result = await Process.run('.\\lib\\BatEvent.bat', [],
-                      runInShell: true);
-                  setState(() => log = result.stdout + result.stderr);
-                },
-                child: const Text('BatEventByTime'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  var result = await Process.run(
-                      '.\\lib\\BatEventDelete.bat', [],
-                      runInShell: true);
-                  setState(() => log = result.stdout + result.stderr);
-                },
-                child: const Text('BatEventDelete'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _selectTime(context, 1);
-                },
-                child: const Text("Choose Start time"),
-              ),
-              Text("${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:" +
-                  "${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}"),
-              ElevatedButton(
-                onPressed: () {
-                  _selectTime(context, 2);
-                },
-                child: const Text("Choose End time"),
-              ),
-              Text("${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:" +
-                  "${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}"),
-            ],
+              ),]
           ),
           Center(
             child: Text(
@@ -119,8 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  myFunc(Stream<List<Int>> std) async {
-    var controller = new StreamController<List<Int>>();
+  myFunc(Stream<List<int>> std) async {
+    var controller = new StreamController<List<int>>();
     controller.addStream(std);
     controller.stream.listen((item) => log = item as String);
   }
