@@ -1,14 +1,25 @@
 import 'dart:ffi' as ffi;
 import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
+import 'package:ffi/ffi.dart' as pffi;
 
-typedef FindMyProcNative = ffi.Int32 Function();
-typedef FindMyProc = int Function();
+var cppLibsPath = path.windows.join(Directory.current.path, 'lib', 'cpp_libs', 'process_monitor.dll');
+//var cppLibsPath = path.windows.join(Directory.current.path, 'cpp_libs', 'process_monitor.dll');
+final cppLibsDll = ffi.DynamicLibrary.open(cppLibsPath);
 
-var libraryPath = path.windows.join(Directory.current.path, 'lib', 'libprocess_monitor', 'libprocess_monitor.dll');
-final dylib = ffi.DynamicLibrary.open(libraryPath);
+typedef FindMyProcNative = ffi.Bool Function();
+typedef FindMyProc = bool Function();
 
-final FindMyProc find = dylib.lookupFunction<FindMyProcNative, FindMyProc>('findMyProc'); 
-int findProc(){
+final FindMyProc find = cppLibsDll.lookupFunction<FindMyProcNative, FindMyProc>('findMyProc'); 
+bool findProc(){
   return find();
+}
+
+typedef GetDisksNative = ffi.Pointer<pffi.Utf8> Function();
+typedef GetDisks = ffi.Pointer<pffi.Utf8> Function();
+
+final GetDisks get = cppLibsDll.lookupFunction<GetDisksNative, GetDisks>('getDisks');
+String getDisks(){
+  var buffer = get();
+  return buffer.toDartString();
 }

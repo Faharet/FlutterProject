@@ -1,8 +1,7 @@
-import 'dart:async';
-import 'dart:ffi' as ffi;
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'process_monitor.dart' as pm;
+import 'package:timer_builder/timer_builder.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -33,12 +32,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool diskpartOnline = false;
+  bool acronisOnline = false;
   String log = 'This is log file';
-  String logStream = '';
-  final controller = StreamController<List<int>>();
-  final myController = TextEditingController();
-  TimeOfDay _selectedTimeStart = TimeOfDay.now();
-  TimeOfDay _selectedTimeEnd = TimeOfDay.now();
+  String diskpartlog = "This is a diskpart log";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,76 +49,55 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () {
-                  if(pm.findProc() != 0){
-                    setState(() {
-                      log = "is On";
-                    });
-                  }
+                  showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(title: Text(Directory.current.path),);
+                  });
                 },
                 child: const Text('BatEventByProcess'),
               ),]
           ),
           Center(
-            child: Text(
-              log,
-              style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  backgroundColor: Colors.black),
-            ),
-          ),
-          Center(
-            child: Text(
-              logStream,
-              style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  backgroundColor: Colors.black),
-            ),
-          ),
+            child: TimerBuilder.periodic(const Duration(seconds: 1), builder: (context){
+              diskpartStatus();
+              diskpartlog = pm.getDisks();
+              return Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
+                    child: Text(
+                      log, 
+                      style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),),),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
+                    child: Text(
+                      diskpartlog, 
+                      style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),),),
+                ]
+              );
+        },)),
         ],
       ),
     );
   }
 
-  myFunc(Stream<List<int>> std) async {
-    var controller = new StreamController<List<int>>();
-    controller.addStream(std);
-    controller.stream.listen((item) => log = item as String);
-  }
-
-  _selectTime(BuildContext context, int i) async {
-    switch (i) {
-      case 1:
-        final TimeOfDay? timeOfDay = await showTimePicker(
-          context: context,
-          initialTime: _selectedTimeStart,
-          initialEntryMode: TimePickerEntryMode.dial,
-        );
-        if (timeOfDay != null && timeOfDay != _selectedTimeStart) {
-          setState(() {
-            _selectedTimeStart = timeOfDay;
-          });
-        }
-        const filename = '.\\lib\\configTimeStart.ini';
-        var file = await File(filename).writeAsString(
-            'mytime=${_selectedTimeStart.hour ~/ 10}${_selectedTimeStart.hour % 10}:${_selectedTimeStart.minute ~/ 10}${_selectedTimeStart.minute % 10}');
-        break;
-      case 2:
-        final TimeOfDay? timeOfDay = await showTimePicker(
-          context: context,
-          initialTime: _selectedTimeEnd,
-          initialEntryMode: TimePickerEntryMode.dial,
-        );
-        if (timeOfDay != null && timeOfDay != _selectedTimeEnd) {
-          setState(() {
-            _selectedTimeEnd = timeOfDay;
-          });
-        }
-        const filename = '.\\lib\\configTimeEnd.ini';
-        var file = await File(filename).writeAsString(
-            'mytime=${_selectedTimeEnd.hour ~/ 10}${_selectedTimeEnd.hour % 10}:${_selectedTimeEnd.minute ~/ 10}${_selectedTimeEnd.minute % 10}');
-        break;
+  void diskpartStatus(){
+    acronisOnline = pm.findProc();
+    if(acronisOnline && !diskpartOnline){
+      Process.run("mspaint.exe", []);
+      diskpartOnline = true;
+      log = "Acronis online, Diskpart offline";
+    }
+    if(acronisOnline && diskpartOnline){
+      diskpartOnline = true;
+      log = "Acronis online, Diskpart online";
+    }
+    if(!acronisOnline && diskpartOnline){
+      Process.run("calc.exe", []);
+      diskpartOnline = false;
+      log = "Acronis offline, Diskpart offline";
+    }
+    if(!acronisOnline && !diskpartOnline){
+      log = "Acronis offline, Diskpart offline";
     }
   }
 }
