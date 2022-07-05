@@ -30,9 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool diskpartOnline = false;
-  bool acronisOnline = false;
-  String log = 'This is log file';
+  String log = "This is a log file";
   List<String> elements = [];
   @override
   Widget build(BuildContext context) {
@@ -40,52 +38,68 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context, 
+                builder: (BuildContext context){
+                  return AlertDialog(
+                    title: Text(Directory.current.path),
+                  );
+                }
+              );
+            },
+            child: const Text('BatEventByProcess'),
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context, 
-                    builder: (BuildContext context){
-                      return AlertDialog(
-                        title: Text(Directory.current.path),
-                      );
-                    }
-                  );
-                },
-                child: const Text('BatEventByProcess'),
-              ),
-            ]
-          ),
-          Center(
-            child: TimerBuilder.periodic(
-              const Duration(seconds: 1), 
-              builder: (context){
-                diskpartStatus();
-                return Column(
+          TimerBuilder.periodic(
+            const Duration(seconds: 1), 
+            builder: (context){
+              log = pm.diskpartStatus();
+              return Center(
+                child: Column(
                   children: <Widget>[
                     GridView.builder(
+                      scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: elements.length,
                       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 35.0, 
-                        crossAxisSpacing: 20.0, 
-                        mainAxisSpacing: 20.0),
+                        maxCrossAxisExtent: 55.0,
+                        mainAxisSpacing: 5.0,
+                        crossAxisSpacing: 5.0
+                      ),
                       itemBuilder: (context, i){
-                        return Card(
-                          
-                          child: OutlinedButton(
-                            onPressed: () => print(elements[i]), 
-                            child: const SizedBox(
-                              child: Text("Button"),
-                              width: 20.0,
-                              height: 20.0,
-                            ),
-                          ),
+                        return Center(
+                          child: ElevatedButton(
+                            onPressed: (){
+                              int result = pm.eject("\\\\.\\H:");
+                              if(result == 0){
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context){
+                                    return AlertDialog(
+                                      title: Text("Ejected $result"),
+                                    );
+                                  }
+                                );
+                              }
+                              else{
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context){
+                                    return AlertDialog(
+                                      title: Text("Error $result"),
+                                    );
+                                  }
+                                );
+                              }
+                            }, 
+                            child: Text(elements[i]),
+                          )
                         );
                       }
                     ),
@@ -96,33 +110,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ]
-                );
-              },
-            )
-          ),
+                )
+              );
+            },
+          )
         ],
       ),
     );
-  }
-
-  void diskpartStatus(){
-    acronisOnline = pm.findProc();
-    if(acronisOnline && !diskpartOnline){
-      Process.run("mspaint.exe", []);
-      diskpartOnline = true;
-      log = "Acronis online, Diskpart offline";
-    }
-    if(acronisOnline && diskpartOnline){
-      diskpartOnline = true;
-      log = "Acronis online, Diskpart online";
-    }
-    if(!acronisOnline && diskpartOnline){
-      Process.run("calc.exe", []);
-      diskpartOnline = false;
-      log = "Acronis offline, Diskpart offline";
-    }
-    if(!acronisOnline && !diskpartOnline){
-      log = "Acronis offline, Diskpart offline";
-    }
   }
 }
