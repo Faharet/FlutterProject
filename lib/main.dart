@@ -24,9 +24,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -35,9 +33,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool diskpartOnline = false;
   bool acronisOnline = false;
   String log = 'This is log file';
-  String diskpartlog = "This is a diskpart log";
+  List<String> elements = [];
   @override
   Widget build(BuildContext context) {
+    elements = pm.getButtons();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -49,32 +48,58 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: () {
-                  showDialog(context: context, builder: (BuildContext context){
-                    return AlertDialog(title: Text(Directory.current.path),);
-                  });
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context){
+                      return AlertDialog(
+                        title: Text(Directory.current.path),
+                      );
+                    }
+                  );
                 },
                 child: const Text('BatEventByProcess'),
-              ),]
+              ),
+            ]
           ),
           Center(
-            child: TimerBuilder.periodic(const Duration(seconds: 1), builder: (context){
-              diskpartStatus();
-              diskpartlog = pm.getDisks();
-              return Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
-                    child: Text(
-                      log, 
-                      style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),),),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
-                    child: Text(
-                      diskpartlog, 
-                      style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),),),
-                ]
-              );
-        },)),
+            child: TimerBuilder.periodic(
+              const Duration(seconds: 1), 
+              builder: (context){
+                diskpartStatus();
+                return Column(
+                  children: <Widget>[
+                    GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: elements.length,
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 35.0, 
+                        crossAxisSpacing: 20.0, 
+                        mainAxisSpacing: 20.0),
+                      itemBuilder: (context, i){
+                        return Card(
+                          
+                          child: OutlinedButton(
+                            onPressed: () => print(elements[i]), 
+                            child: const SizedBox(
+                              child: Text("Button"),
+                              width: 20.0,
+                              height: 20.0,
+                            ),
+                          ),
+                        );
+                      }
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
+                      child: Text(
+                        log, style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),
+                      ),
+                    ),
+                  ]
+                );
+              },
+            )
+          ),
         ],
       ),
     );

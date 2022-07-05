@@ -23,3 +23,15 @@ String getDisks(){
   var buffer = get();
   return buffer.toDartString();
 }
+
+List<String> getButtons(){
+  String diskpartlog = "This is a diskpart log";
+  diskpartlog = getDisks();
+  final List<String> elements = [];
+  int i = 0;
+  while(i < diskpartlog.length){
+    elements.add(diskpartlog[i]);
+    i = i + 3;
+  }
+  return elements;
+}
