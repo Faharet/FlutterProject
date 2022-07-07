@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'process_monitor.dart' as pm;
 import 'package:timer_builder/timer_builder.dart';
-import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> elements = [];
   @override
   Widget build(BuildContext context) {
-    elements = pm.getButtons();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -44,8 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
               showDialog(
                 context: context, 
                 builder: (BuildContext context){
-                  return AlertDialog(
-                    title: Text(Directory.current.path),
+                  return const AlertDialog(
+                    title: Text("qwerwe"),
                   );
                 }
               );
@@ -60,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Duration(seconds: 1), 
             builder: (context){
               log = pm.diskpartStatus();
+              elements = pm.getButtons();
               return Center(
                 child: Column(
                   children: <Widget>[
@@ -76,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         return Center(
                           child: ElevatedButton(
                             onPressed: (){
-                              int result = pm.eject("\\\\.\\H:");
+                              int result = pm.eject("\\\\.\\F:");
                               if(result == 0){
                                 showDialog(
                                   context: context, 
