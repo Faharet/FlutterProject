@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'process_monitor.dart' as pm;
+import 'view_controller.dart' as pm;
 import 'package:timer_builder/timer_builder.dart';
 
 void main() {
@@ -29,8 +29,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String log = "This is a log file";
-  List<String> elements = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,15 +55,14 @@ class _MyHomePageState extends State<MyHomePage> {
           TimerBuilder.periodic(
             const Duration(seconds: 1), 
             builder: (context){
-              log = pm.diskpartStatus();
-              elements = pm.getButtons();
+              pm.ViewController viewController = pm.ViewController();
               return Center(
                 child: Column(
                   children: <Widget>[
                     GridView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: elements.length,
+                      itemCount: viewController.elements.length,
                       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 55.0,
                         mainAxisSpacing: 5.0,
@@ -75,29 +72,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         return Center(
                           child: ElevatedButton(
                             onPressed: (){
-                              int result = pm.eject("\\\\.\\F:");
-                              if(result == 0){
+                              viewController.setButtonName(viewController.elements[i]);
                                 showDialog(
                                   context: context, 
                                   builder: (BuildContext context){
                                     return AlertDialog(
-                                      title: Text("Ejected $result"),
+                                      title: Text("Selected ${viewController.elements[i]}"),
                                     );
                                   }
                                 );
-                              }
-                              else{
-                                showDialog(
-                                  context: context, 
-                                  builder: (BuildContext context){
-                                    return AlertDialog(
-                                      title: Text("Error $result"),
-                                    );
-                                  }
-                                );
-                              }
                             }, 
-                            child: Text(elements[i]),
+                            child: Text(viewController.elements[i]),
                           )
                         );
                       }
@@ -105,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
                       child: Text(
-                        log, style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),
+                        viewController.processLog, style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),
                       ),
                     ),
                   ]
