@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'view_controller.dart' as pm;
 import 'package:timer_builder/timer_builder.dart';
+import 'view_controller.dart' as vc;
+import 'drive_controller.dart' as dc;
 
 void main() {
   runApp(const MyApp());
@@ -29,9 +30,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static late String button;
   @override
   Widget build(BuildContext context) {
-    String button;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -56,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
           TimerBuilder.periodic(
             const Duration(seconds: 1), 
             builder: (context){
-              pm.ViewController viewController = pm.ViewController();
+              vc.ViewController viewController = vc.ViewController();
               return Center(
                 child: Column(
                   children: <Widget>[
@@ -74,26 +75,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: ElevatedButton(
                             onPressed: (){
                               button = viewController.elements[i];
-                              viewController.setButtonName(button);
-                                showDialog(
-                                  context: context, 
-                                  builder: (BuildContext context){
-                                    return AlertDialog(
-                                      title: Text("Selected ${viewController.elements[i]}"),
-                                    );
-                                  }
-                                );
+                              Navigator.push(
+                                context, 
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) => dc.DriveController(b: button),
+                                ),
+                              );
                             }, 
                             child: Text(viewController.elements[i]),
                           )
                         );
                       }
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0), 
-                      child: Text(
-                        viewController.processLog, style: const TextStyle(color: Colors.black, backgroundColor: Colors.white),
-                      ),
                     ),
                   ]
                 )
