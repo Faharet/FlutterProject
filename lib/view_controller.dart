@@ -22,6 +22,7 @@ class ViewController{
   late String button;
   ViewController(){
     getButtons();
+    getProcessLog();
   }
 
 
