@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    String button;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -72,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         return Center(
                           child: ElevatedButton(
                             onPressed: (){
-                              viewController.setButtonName(viewController.elements[i]);
+                              button = viewController.elements[i];
+                              viewController.setButtonName(button);
                                 showDialog(
                                   context: context, 
                                   builder: (BuildContext context){

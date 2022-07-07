@@ -19,7 +19,6 @@ class ViewController{
   String processLog = "Process log";
   String diskButtons = "Disk log";
   List<String> elements = [];
-  late String button;
   ViewController(){
     getButtons();
     getProcessLog();
