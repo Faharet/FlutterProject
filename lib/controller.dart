@@ -7,8 +7,8 @@ typedef GetDisksNative = ffi.Pointer<pffi.Utf8> Function();
 typedef GetDisks = ffi.Pointer<pffi.Utf8> Function();
 typedef FindMyProcNative = ffi.Bool Function();
 typedef FindMyProc = bool Function();
-typedef MediaNative = ffi.Void Function(ffi.Pointer<pffi.Utf8> media, ffi.Bool signal);
-typedef Media = void Function(ffi.Pointer<pffi.Utf8> media, bool signal);
+typedef MediaNative = ffi.Bool Function(ffi.Pointer<pffi.Utf8> media, ffi.Bool signal);
+typedef Media = bool Function(ffi.Pointer<pffi.Utf8> media, bool signal);
 
 final cppLibsPath = path.windows.join(Directory.current.path, 'lib', 'cpp_libs', 'process_monitor.dll'); 
 //final var cppLibsPath = path.windows.join(Directory.current.path, 'cpp_libs', 'process_monitor.dll');
@@ -29,16 +29,23 @@ class Controller{
   }
 
   void getProcessLog(String button){
+    bool mediaResult = false;
     bool acronisOnline = false;
     acronisOnline = findProc();
     elements.clear();
     if(acronisOnline){
-      manageMedia("\\\\.\\$button:", true);
-      processLog = "$button ON";
+      mediaResult = manageMedia("\\\\.\\$button:", true);
+      if(mediaResult) {
+        mediaResult = false;
+      }
+      processLog = "$button ON $mediaResult";
     }
     if(!acronisOnline){
-      manageMedia("\\\\.\\$button:", false);
-      processLog = "$button OFF";
+      mediaResult = manageMedia("\\\\.\\$button:", false);
+      if(mediaResult){
+        mediaResult = false;
+      }
+      processLog = "$button OFF $mediaResult";
     } 
   }
 
@@ -48,8 +55,8 @@ class Controller{
   }
 
   final Media manage = cppLibsDll.lookupFunction<MediaNative, Media>('manageMedia');
-  void manageMedia(String media, bool signal){
-    manage(media.toNativeUtf8(), signal);
+  bool manageMedia(String media, bool signal){
+    return manage(media.toNativeUtf8(), signal);
   }
 
   final GetDisks get = cppLibsDll.lookupFunction<GetDisksNative, GetDisks>('getDisks');
@@ -58,4 +65,3 @@ class Controller{
     return buffer.toDartString();
   }
 }
-
