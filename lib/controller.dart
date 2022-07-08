@@ -23,35 +23,22 @@ class Controller{
 
   void getButtons(){
     diskButtons = getDisks();
-    int i = 0;
-    while(i < diskButtons.length){ // ?
+    for(int i = 0; i < diskButtons.length; ++i) {
       elements.add(diskButtons[i]);
-      i = i + 3;
     }
   }
 
   void getProcessLog(String button){
-    bool diskpartOnline = false;
     bool acronisOnline = false;
     acronisOnline = findProc();
     elements.clear();
-    if(acronisOnline && !diskpartOnline){
+    if(acronisOnline){
       manageMedia("\\\\.\\$button:", true);
-      diskpartOnline = true;
-      processLog = "Acronis online, Diskpart offline";
+      processLog = "$button ON";
     }
-    if(acronisOnline && diskpartOnline){
-      diskpartOnline = true;
-      processLog = "Acronis online, Diskpart online";
-    }
-    if(!acronisOnline && diskpartOnline){
+    if(!acronisOnline){
       manageMedia("\\\\.\\$button:", false);
-      diskpartOnline = false;
-      processLog = "Acronis offline, Diskpart offline";
-    }
-    if(!acronisOnline && !diskpartOnline){
-      manageMedia("\\\\.\\$button:", false);
-      processLog = "Acronis offline, Diskpart offline";
+      processLog = "$button OFF";
     } 
   }
 
