@@ -3,7 +3,7 @@ import 'package:timer_builder/timer_builder.dart';
 import 'package:ffi/ffi.dart' as pffi;
 import 'controller.dart' as c;
 
-late String drive;
+late c.Drive drive;
 bool route = false;
 
 void main() {
@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage>{
                     child: ElevatedButton(
                       onPressed: (){
                         setState(() {
-                          drive = controller.drives[i].letter.toDartString();
+                          drive = controller.drives[i];
                           route = true;
                         });
                       }, 
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage>{
     );
   }
 
-  Widget driveController(String button){
+  Widget driveController(c.Drive button){
     return TimerBuilder.periodic(
       const Duration(seconds: 1), 
       builder: (context) {

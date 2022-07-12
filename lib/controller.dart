@@ -34,20 +34,21 @@ class Controller{
     }
   }
 
-  void getProcessLog(String button){
+  void getProcessLog(Drive button){
     bool mediaResult = false;
     bool acronisOnline = false;
     acronisOnline = findProc();
+    String command = button.letter.toDartString()[0];
     drives.clear();
     if(acronisOnline){
-      mediaResult = manageMedia("\\\\.\\$button:", true);
+      mediaResult = manageMedia("\\\\.\\$command:", true);
       if(mediaResult) {
         mediaResult = false;
       }
       processLog = "$button ON $mediaResult";
     }
     if(!acronisOnline){
-      mediaResult = manageMedia("\\\\.\\$button:", false);
+      mediaResult = manageMedia("\\\\.\\$command:", false);
       if(mediaResult){
         mediaResult = false;
       }
