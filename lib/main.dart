@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
+import 'package:ffi/ffi.dart' as pffi;
 import 'controller.dart' as c;
 
 late String drive;
@@ -41,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage>{
           ElevatedButton(
             onPressed: () {
               setState((){
-                controller.elements.clear();
+                controller.drives.clear();
                 route = false;
               });
               showDialog(
@@ -74,9 +75,9 @@ class _MyHomePageState extends State<MyHomePage>{
               GridView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: controller.elements.length,
+                itemCount: controller.drives.length,
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 55.0,
+                  maxCrossAxisExtent: 100.0,
                   mainAxisSpacing: 5.0,
                   crossAxisSpacing: 5.0
                 ),
@@ -85,11 +86,11 @@ class _MyHomePageState extends State<MyHomePage>{
                     child: ElevatedButton(
                       onPressed: (){
                         setState(() {
-                          drive = controller.elements[i];
+                          drive = controller.drives[i].letter.toDartString();
                           route = true;
                         });
                       }, 
-                      child: Text(controller.elements[i]),
+                      child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].label.toDartString()),
                     )
                   );
                 }

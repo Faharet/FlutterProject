@@ -3,8 +3,15 @@ import 'package:path/path.dart' as path;
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pffi;
 
-typedef GetDisksNative = ffi.Pointer<pffi.Utf8> Function();
-typedef GetDisks = ffi.Pointer<pffi.Utf8> Function();
+class Drive extends ffi.Struct{
+  external ffi.Pointer<pffi.Utf8> letter;
+  external ffi.Pointer<pffi.Utf8> label;
+}
+
+typedef GetLetterNative = Drive Function(ffi.Int i);
+typedef GetLetter =  Drive Function(int i);
+typedef GetLengthNative = ffi.Int Function();
+typedef GetLength =  int Function();
 typedef FindMyProcNative = ffi.Bool Function();
 typedef FindMyProc = bool Function();
 typedef MediaNative = ffi.Bool Function(ffi.Pointer<pffi.Utf8> media, ffi.Bool signal);
@@ -17,14 +24,13 @@ final cppLibsDll = ffi.DynamicLibrary.open(cppLibsPath);
 
 class Controller{
   String processLog = "Process log";
-  String diskButtons = "Disk log";
-  List<String> elements = [];
+  List<Drive> drives = [];
   Controller();
 
   void getButtons(){
-    diskButtons = getDisks();
-    for(int i = 0; i < diskButtons.length; ++i) {
-      elements.add(diskButtons[i]);
+    int length = getLength();
+    for(int i = 0; i < length*4; i += 4){
+      drives.add(getLetter(i));
     }
   }
 
@@ -32,7 +38,7 @@ class Controller{
     bool mediaResult = false;
     bool acronisOnline = false;
     acronisOnline = findProc();
-    elements.clear();
+    drives.clear();
     if(acronisOnline){
       mediaResult = manageMedia("\\\\.\\$button:", true);
       if(mediaResult) {
@@ -59,9 +65,15 @@ class Controller{
     return manage(media.toNativeUtf8(), signal);
   }
 
-  final GetDisks get = cppLibsDll.lookupFunction<GetDisksNative, GetDisks>('getDisks');
-  String getDisks(){
-    var buffer = get();
-    return buffer.toDartString();
+  final GetLetter getletter = cppLibsDll.lookupFunction<GetLetterNative, GetLetter>('getLetter');
+  Drive getLetter(int i){
+    var buffer = getletter(i);
+    return buffer;
+  }
+
+  final GetLength getlength = cppLibsDll.lookupFunction<GetLengthNative, GetLength>('getLength');
+  int getLength(){
+    var buffer = getlength();
+    return buffer;
   }
 }
