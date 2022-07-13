@@ -46,27 +46,14 @@ class _MyHomePageState extends State<MyHomePage>{
                 controller.drives.clear();
                 route = false;
               });
-              showDialog(
-                context: context, 
-                builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("ByEvent"),
-                  );
-                }
-              );
             },
             child: const Text('ByEvent'),
           ),
           ElevatedButton(onPressed: () {
             Navigator.push(
               context, 
-              MaterialPageRoute(builder: (BuildContext context) => const calendar.CalendarPage()));
-            showDialog(
-              context: context, 
-              builder: (BuildContext context){
-                return const AlertDialog(
-                  content: Text("ByTable"),);
-              });
+              MaterialPageRoute(builder: (BuildContext context) => const calendar.CalendarPage())
+            );
           },
           child: const Text("ByTable"),)
         ],
