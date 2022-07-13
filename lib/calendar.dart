@@ -12,101 +12,90 @@ class CalendarPage extends StatefulWidget {
 
 class CalendarPageState extends State<CalendarPage> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  TextEditingController controller = TextEditingController();
+  TextEditingController diskController = TextEditingController();
+  TextEditingController backupController = TextEditingController();
   late String diskToBackup = "not set";
   late String backupToDisk = "not set";
   late TimeOfDay time = TimeOfDay.now();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TableCalendar(
               focusedDay: DateTime.now(), 
               firstDay: DateTime.now(), 
               lastDay: DateTime.utc(2023),
               onDaySelected: (selectedDay, focusedDay){
-                showDialog(context: context, builder: (BuildContext context){
-                  return AlertDialog(
-                    content: Card(
-                      color: Colors.amber,
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            controller: controller,
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.drive_eta),
-                              labelText: "disk to be backed up",
-                              hintText: "[diskLetter]:",
-                            ),
-                            validator: (value){
-                              RegExp reg = RegExp("^[A-Z]:");
-                              if(value!.isEmpty){
-                                return "Can not be empty";
-                              }
-                              if(!value.contains(reg)){
-                                return "Usage: {[letter]:}"; 
-                              }
-                            },
-                            onChanged: (String value){
-                                if(formkey.currentState != null){
-                                  formkey.currentState!.validate();
-                                  setState(() {
-                                  backupToDisk = value;
-                                  });
+                showDialog(
+                  context: context, 
+                  builder: (BuildContext context){
+                    return Form(
+                      key: formkey,
+                      child: Card(
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              controller: diskController,
+                              validator: (value){
+                                if(value == null || value.isEmpty){
+                                  return "Must be filled";
                                 }
-                            }
-                          ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.drive_eta),
-                              labelText: "disk to save the backup",
-                              hintText: "[diskLetter]:",
+                                RegExp reg = RegExp("^[A-Z]:");
+                                if(!value.contains(reg)){
+                                  return "Usage: {[letter]:}"; 
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value){
-                              RegExp reg = RegExp("^[A-Z]:");
-                              if(value!.isEmpty){
-                                return "Can not be empty";
-                              }
-                              if(!value.contains(reg)){
-                                return "Usage: {[letter]:}"; 
-                              }
-                            },
-                            onChanged: (String value){
-                                setState(() {
-                                  backupToDisk = value;
-                                });
-                            },
-                          ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                            child: ElevatedButton(
-                            onPressed: (){
-                              selectTime(context);
-                            }, 
-                            child: const Text("Set time"))
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).then((value) async {
-                  var file = await File("lib\\scripts\\config.ini").writeAsString("way=$diskToBackup\ndisk=$backupToDisk\nmytime=${time.hour}:${time.minute}\nscript=C:\\Script\\Script#1.txt");
-                } );
-              },),
-              Text("$diskToBackup $backupToDisk ${time.hour}:${time.minute}"),
-              ElevatedButton(
-                onPressed: (){
-
-                }, 
-                child: const Text("Ready"))
+                            TextFormField(
+                              controller: backupController,
+                              validator: (value){
+                                if(value == null || value.isEmpty){
+                                  return "Must be filled";
+                                }
+                                RegExp reg = RegExp("^[A-Z]:");
+                                if(!value.contains(reg)){
+                                  return "Usage: {[letter]:}"; 
+                                }
+                                return null;
+                              },
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 10.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  selectTime(context);
+                                },
+                                child: const Text("Set time"),
+                              )
+                            ),
+                            const Spacer(),
+                            ElevatedButton(
+                              onPressed: (){
+                                if(formkey.currentState!.validate()){
+                                  setState(() {
+                                    diskToBackup = diskController.text;
+                                    backupToDisk = backupController.text;
+                                  });
+                                  File("lib\\scripts\\config.ini").writeAsString("backupDisk=${diskToBackup[0]}:\nwayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nmytime=${time.hour}:${time.minute}\nscript=C:\\Script\\Script#1.txt");
+                                  Navigator.pop(context);
+                                }
+                              }, 
+                              child: const Text("Confirm")
+                            ),
+                          ],
+                        ),
+                      )
+                    );
+                  }
+                );
+              },
+            ),
           ],
-        ),
+        )
       ),
     );
   }
