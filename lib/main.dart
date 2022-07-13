@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:ffi/ffi.dart' as pffi;
-import 'controller.dart' as c;
+import 'controller.dart' as control;
+import 'calendar.dart' as calendar;
 
-late c.Drive drive;
+late control.Drive drive;
 bool route = false;
 
 void main() {
@@ -32,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>{
-  c.Controller controller = c.Controller();
+  control.Controller controller = control.Controller();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,13 +50,25 @@ class _MyHomePageState extends State<MyHomePage>{
                 context: context, 
                 builder: (BuildContext context){
                   return const AlertDialog(
-                    title: Text("qwerwe"),
+                    title: Text("ByEvent"),
                   );
                 }
               );
             },
-            child: const Text('BatEventByProcess'),
+            child: const Text('ByEvent'),
           ),
+          ElevatedButton(onPressed: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (BuildContext context) => const calendar.CalendarPage()));
+            showDialog(
+              context: context, 
+              builder: (BuildContext context){
+                return const AlertDialog(
+                  content: Text("ByTable"),);
+              });
+          },
+          child: const Text("ByTable"),)
         ],
       ),
       body: Center(
@@ -102,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage>{
     );
   }
 
-  Widget driveController(c.Drive button){
+  Widget driveController(control.Drive button){
     return TimerBuilder.periodic(
       const Duration(seconds: 1), 
       builder: (context) {
