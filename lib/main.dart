@@ -6,6 +6,7 @@ import 'calendar.dart' as calendar;
 
 late control.Drive drive;
 bool route = false;
+late String diskTitle;
 
 void main() {
   runApp(const MyApp());
@@ -88,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage>{
                         setState(() {
                           drive = controller.drives[i];
                           route = true;
+                          diskTitle = controller.drives[i].label.toDartString();
                         });
                       }, 
                       child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].label.toDartString()),

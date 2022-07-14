@@ -2,6 +2,7 @@ import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pffi;
+import 'main.dart' as main;
 
 class Drive extends ffi.Struct{
   external ffi.Pointer<pffi.Utf8> letter;
@@ -40,19 +41,21 @@ class Controller{
     acronisOnline = findProc();
     String command = button.letter.toDartString()[0];
     drives.clear();
-    if(acronisOnline){
-      mediaResult = manageMedia("\\\\.\\$command:", true);
-      if(mediaResult) {
-        mediaResult = false;
+    if(button.label.toDartString() == main.diskTitle){
+      if(acronisOnline){
+        mediaResult = manageMedia("\\\\.\\$command:", true);
+        if(mediaResult) {
+          mediaResult = false;
+        }
+        processLog = "$button ON $mediaResult";
       }
-      processLog = "$button ON $mediaResult";
-    }
-    if(!acronisOnline){
-      mediaResult = manageMedia("\\\\.\\$command:", false);
-      if(mediaResult){
-        mediaResult = false;
+      if(!acronisOnline){
+        mediaResult = manageMedia("\\\\.\\$command:", false);
+        if(mediaResult){
+          mediaResult = false;
+        }  
+        processLog = "$button OFF $mediaResult";
       }
-      processLog = "$button OFF $mediaResult";
     } 
   }
 
