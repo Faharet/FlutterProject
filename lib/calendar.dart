@@ -80,8 +80,19 @@ class CalendarPageState extends State<CalendarPage> {
                                     diskToBackup = diskController.text;
                                     backupToDisk = backupController.text;
                                   });
-                                  File("lib\\scripts\\config.ini").writeAsString("backupDisk=${diskToBackup[0]}:\nwayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nmytime=${time.hour}:${time.minute}\nscript=C:\\Script\\Script#1.txt");
+                                  File("lib\\scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nmytime=${time.hour}:${time.minute}\nscript=C:\\Users\\smartassraty\\FlutterProject\\lib\\scripts\\Script#1.bat");
                                   Navigator.pop(context);
+                                  String out = "blank";
+                                  Process.run("C:\\Users\\smartassraty\\FlutterProject\\lib\\scripts\\schScript.bat", []).then((value) => out = value.stdout);
+                                    showDialog(
+                                      context: context, 
+                                      builder: (BuildContext context){
+                                        return AlertDialog(
+                                          content: Text(out),
+                                        );
+                                      }
+                                    );
+                                  
                                 }
                               }, 
                               child: const Text("Confirm")
