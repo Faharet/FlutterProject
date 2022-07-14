@@ -6,11 +6,12 @@ import 'main.dart' as main;
 
 class Drive extends ffi.Struct{
   external ffi.Pointer<pffi.Utf8> letter;
-  external ffi.Pointer<pffi.Utf8> label;
+  @ffi.UnsignedLong()
+  external int serialNumber;
 }
 
-typedef GetLetterNative = Drive Function(ffi.Int i);
-typedef GetLetter =  Drive Function(int i);
+typedef GetNumberNative = Drive Function(ffi.Int i);
+typedef GetNumber =  Drive Function(int i);
 typedef GetLengthNative = ffi.Int Function();
 typedef GetLength =  int Function();
 typedef FindMyProcNative = ffi.Bool Function();
@@ -31,7 +32,7 @@ class Controller{
   void getButtons(){
     int length = getLength();
     for(int i = 0; i < length*4; i += 4){
-      drives.add(getLetter(i));
+      drives.add(getNumber(i));
     }
   }
 
@@ -41,7 +42,7 @@ class Controller{
     acronisOnline = findProc();
     String command = button.letter.toDartString()[0];
     drives.clear();
-    if(button.label.toDartString() == main.diskTitle){
+    if(button.serialNumber == main.diskTitle){
       if(acronisOnline){
         mediaResult = manageMedia("\\\\.\\$command:", true);
         if(mediaResult) {
@@ -54,7 +55,7 @@ class Controller{
         if(mediaResult){
           mediaResult = false;
         }  
-        processLog = "$button OFF $mediaResult";
+        processLog = "${button.letter.toDartString()} OFF $mediaResult";
       }
     } 
   }
@@ -69,9 +70,9 @@ class Controller{
     return manage(media.toNativeUtf8(), signal);
   }
 
-  final GetLetter getletter = cppLibsDll.lookupFunction<GetLetterNative, GetLetter>('getLetter');
-  Drive getLetter(int i){
-    var buffer = getletter(i);
+  final GetNumber getnumber = cppLibsDll.lookupFunction<GetNumberNative, GetNumber>('getNumber');
+  Drive getNumber(int i){
+    var buffer = getnumber(i);
     return buffer;
   }
 

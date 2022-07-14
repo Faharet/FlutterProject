@@ -6,7 +6,7 @@ import 'calendar.dart' as calendar;
 
 late control.Drive drive;
 bool route = false;
-late String diskTitle;
+late int diskTitle;
 
 void main() {
   runApp(const MyApp());
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage>{
                 shrinkWrap: true,
                 itemCount: controller.drives.length,
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 100.0,
+                  maxCrossAxisExtent: 140.0,
                   mainAxisSpacing: 5.0,
                   crossAxisSpacing: 5.0
                 ),
@@ -89,10 +89,10 @@ class _MyHomePageState extends State<MyHomePage>{
                         setState(() {
                           drive = controller.drives[i];
                           route = true;
-                          diskTitle = controller.drives[i].label.toDartString();
+                          diskTitle = controller.drives[i].serialNumber;
                         });
                       }, 
-                      child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].label.toDartString()),
+                      child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].serialNumber.toString()),
                     )
                   );
                 }
