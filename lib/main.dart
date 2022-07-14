@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:timer_builder/timer_builder.dart';
-import 'package:ffi/ffi.dart' as pffi;
-import 'controller.dart' as control;
-import 'calendar.dart' as calendar;
-
-late control.Drive drive;
-bool route = false;
-late int diskTitle;
+import 'package:flutter_html/flutter_html.dart';
+import 'dart:io';
+import 'planner.dart' as planner;
+import 'event.dart' as event;
 
 void main() {
   runApp(const MyApp());
@@ -34,85 +30,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>{
-  control.Controller controller = control.Controller();
+  var file = File("C:\\Users\\user2\\FlutterProject\\lib\\main.html").readAsStringSync();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              setState((){
-                controller.drives.clear();
-                route = false;
-              });
-            },
-            child: const Text('ByEvent'),
-          ),
-          ElevatedButton(onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (BuildContext context) => const calendar.CalendarPage())
-            );
-          },
-          child: const Text("ByTable"),)
-        ],
       ),
-      body: Center(
-        child: route ? driveController(drive) : viewController(),
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            ElevatedButton(
+              child: const Text("Event"),
+              onPressed: () => Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const event.EventPage()
+                )
+              )
+            ),
+            ElevatedButton(
+              child: const Text("Planner"),
+              onPressed: () => Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const planner.PlannerPage()
+                )
+              )
+            )
+          ]
+        )
       ),
-    );
-  }
-
-  Widget viewController(){
-    controller.getButtons();
-    return TimerBuilder.periodic(
-      const Duration(seconds: 1), 
-      builder: (context) {
-        return Center(
-          child: Column(
-            children: <Widget>[
-              GridView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: controller.drives.length,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 140.0,
-                  mainAxisSpacing: 5.0,
-                  crossAxisSpacing: 5.0
-                ),
-                itemBuilder: (context, i){
-                  return Center(
-                    child: ElevatedButton(
-                      onPressed: (){
-                        setState(() {
-                          drive = controller.drives[i];
-                          route = true;
-                          diskTitle = controller.drives[i].serialNumber;
-                        });
-                      }, 
-                      child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].serialNumber.toString()),
-                    )
-                  );
-                }
-              ),
-            ]
-          )
-        ); 
-      },
-    );
-  }
-
-  Widget driveController(control.Drive button){
-    return TimerBuilder.periodic(
-      const Duration(seconds: 1), 
-      builder: (context) {
-        controller.getProcessLog(button);
-        return Center(
-          child: Text(controller.processLog)
-        ); 
-      },
+      body: Html(data: file),
     );
   }
 }

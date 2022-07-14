@@ -39,7 +39,7 @@ dependencies:
   timer_builder: ^2.0.0
   ffi: ^2.0.1
   win32: ^2.7.0
-  table_calendar: ^3.0.6
+  flutter_html: ^2.2.1
 
 dev_dependencies:
   flutter_test:
