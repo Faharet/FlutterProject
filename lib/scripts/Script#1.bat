@@ -5,8 +5,7 @@ for /f "tokens=1,2 delims==" %%a in (C:\Users\smartassraty\FlutterProject\lib\sc
     if %%a==wayToDisk set wayToDisk=%%b
     if %%a==disk set disk=%%b
 )
-cd \d %wayToFiles%
 ForFiles /p "%wayToFiles%" /s /c "cmd /c del @file /f /q" /d -60
 start D:\Release\scripts\load.exe \\.\%disk%
-xcopy * %wayToDisk%
+xcopy %wayToFiles%\ %wayToDisk%
 start D:\Release\scripts\eject.exe \\.\%disk%
