@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'dart:io' show Process, File;
 
 class PlannerPage extends StatefulWidget {
   const PlannerPage({Key? key}) : super(key: key);
-  final String title = "Calendar";
+  final String title = "Planner";
 
   @override
   State<PlannerPage> createState() => PlannerPageState();
@@ -29,6 +29,8 @@ class PlannerPageState extends State<PlannerPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: "Disk to backup"),
                   controller: diskController,
                   validator: (value){
                     if(value == null || value.isEmpty){
@@ -42,6 +44,8 @@ class PlannerPageState extends State<PlannerPage> {
                   },
                 ),
                 TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: "Save backup"),
                   controller: backupController,
                   validator: (value){
                     if(value == null || value.isEmpty){
@@ -55,6 +59,8 @@ class PlannerPageState extends State<PlannerPage> {
                   },
                 ),
                 TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: "Days of week to backup"),
                   controller: dayController,
                   validator: (value){
                     if(value == null || value.isEmpty){

@@ -5,7 +5,6 @@ import 'controller.dart' as control;
 
 late control.Drive drive;
 bool route = false;
-late int diskTitle;
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -51,7 +50,6 @@ class EventPageState extends State<EventPage>{
                         setState(() {
                           drive = controller.drives[i];
                           route = true;
-                          diskTitle = controller.drives[i].serialNumber;
                         });
                       }, 
                       child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].serialNumber.toString()),

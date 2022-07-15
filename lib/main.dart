@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'dart:io';
+import 'dart:io' show File;
 import 'planner.dart' as planner;
 import 'event.dart' as event;
 

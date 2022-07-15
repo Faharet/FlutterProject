@@ -2,7 +2,6 @@ import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pffi;
-import 'event.dart' as event;
 
 class Drive extends ffi.Struct{
   external ffi.Pointer<pffi.Utf8> letter;
@@ -37,28 +36,31 @@ class Controller{
   }
 
   void getProcessLog(Drive button){
-    bool mediaResult = false;
-    bool acronisOnline = false;
-    acronisOnline = findProc();
-    String command = button.letter.toDartString()[0];
     drives.clear();
-    if(button.serialNumber == event.diskTitle){
-      if(acronisOnline){
-        mediaResult = manageMedia("\\\\.\\$command:", true);
-        if(mediaResult) {
-          mediaResult = false;
+    for(int i = 0; i < getLength(); i){
+      if(drives[i].serialNumber == button.serialNumber){
+        bool mediaResult = false;
+        bool acronisOnline = false;
+        acronisOnline = findProc();
+        String command = button.letter.toDartString()[0];
+        if(acronisOnline){
+          mediaResult = manageMedia("\\\\.\\$command:", true);
+          if(mediaResult) {
+            mediaResult = false;
+          }
+          processLog = "$button ON $mediaResult";
         }
-        processLog = "$button ON $mediaResult";
+        if(!acronisOnline){
+          mediaResult = manageMedia("\\\\.\\$command:", false);
+          if(mediaResult){
+            mediaResult = false;
+          }  
+          processLog = "${button.letter.toDartString()} OFF $mediaResult";
+        }
       }
-      if(!acronisOnline){
-        mediaResult = manageMedia("\\\\.\\$command:", false);
-        if(mediaResult){
-          mediaResult = false;
-        }  
-        processLog = "${button.letter.toDartString()} OFF $mediaResult";
+
       }
-    } 
-  }
+    }
 
   final FindMyProc find = cppLibsDll.lookupFunction<FindMyProcNative, FindMyProc>('findMyProc');
   bool findProc(){
