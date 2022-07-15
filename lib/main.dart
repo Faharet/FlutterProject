@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'dart:io' show File;
+import 'dart:io' show File, Directory;
 import 'planner.dart' as planner;
 import 'event.dart' as event;
 
@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>{
-  var file = File("main.html").readAsStringSync();
+  var file = File("${Directory.current.path}\\main.html").readAsStringSync();
   @override
   Widget build(BuildContext context){
     return Scaffold(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io' show Process, File;
+import 'dart:io' show Process, File, Directory;
 
 class PlannerPage extends StatefulWidget {
   const PlannerPage({Key? key}) : super(key: key);
@@ -92,10 +92,10 @@ class PlannerPageState extends State<PlannerPage> {
                         dayToBackup = dayController.text;
                       });
                       //File("lib\\scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=C:\\Users\\smartassraty\\FlutterProject\\lib\\scripts\\Script#1.bat");
-                      File("scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=C:\\Users\\smartassraty\\FlutterProject\\lib\\scripts\\Script#1.bat");
+                      File("scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\scripts\\Script#1.bat");
                       Navigator.pop(context);
                       String out = "blank";
-                      Process.run("scripts\\Script#1.bat", []).then((value) => out = value.stdout);
+                      Process.run("${Directory.current.path}\\scripts\\Script#1.bat", []).then((value) => out = value.stdout);
                       showDialog(
                         context: context, 
                         builder: (BuildContext context){
