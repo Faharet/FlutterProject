@@ -50,7 +50,7 @@ class Controller{
           if(mediaResult) {
             mediaResult = false;
           }
-          processLog = "$button ON $mediaResult";
+          processLog = "${button.letter.toDartString()} ON $mediaResult";
         }
         if(!acronisOnline){
           mediaResult = manageMedia("\\\\.\\$command:", false);

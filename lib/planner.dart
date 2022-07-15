@@ -95,7 +95,7 @@ class PlannerPageState extends State<PlannerPage> {
                       File("scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=C:\\Users\\smartassraty\\FlutterProject\\lib\\scripts\\Script#1.bat");
                       Navigator.pop(context);
                       String out = "blank";
-                      Process.run("scripts\\schScript.bat", []).then((value) => out = value.stdout);
+                      Process.run("scripts\\Script#1.bat", []).then((value) => out = value.stdout);
                       showDialog(
                         context: context, 
                         builder: (BuildContext context){
