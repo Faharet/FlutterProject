@@ -7,8 +7,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutterfiles/main.dart';
+import 'package:flutterfiles/controller.dart';
+import 'package:flutterfiles/event.dart';
+import 'package:flutterfiles/planner.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -27,4 +29,11 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+  group("Controller", (){
+    test("", (){
+      expect(Controller().findProc(), "C:\\D:\\");
+    });
+  });
 }
+
