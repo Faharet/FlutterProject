@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>{
-  var file = File("C:\\Users\\user2\\FlutterProject\\lib\\main.html").readAsStringSync();
+  var file = File("main.html").readAsStringSync();
   @override
   Widget build(BuildContext context){
     return Scaffold(

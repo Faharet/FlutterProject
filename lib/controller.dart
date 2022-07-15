@@ -18,8 +18,8 @@ typedef FindMyProc = bool Function();
 typedef MediaNative = ffi.Bool Function(ffi.Pointer<pffi.Utf8> media, ffi.Bool signal);
 typedef Media = bool Function(ffi.Pointer<pffi.Utf8> media, bool signal);
 
-final cppLibsPath = path.windows.join(Directory.current.path, 'lib', 'cpp_libs', 'process_monitor.dll'); 
-//final var cppLibsPath = path.windows.join(Directory.current.path, 'cpp_libs', 'process_monitor.dll');
+//final cppLibsPath = path.windows.join(Directory.current.path, 'lib', 'cpp_libs', 'process_monitor.dll'); 
+final cppLibsPath = path.windows.join(Directory.current.path, 'cpp_libs', 'process_monitor.dll');
 
 final cppLibsDll = ffi.DynamicLibrary.open(cppLibsPath);
 
