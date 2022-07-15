@@ -37,7 +37,9 @@ class Controller{
 
   void getProcessLog(Drive button){
     drives.clear();
-    for(int i = 0; i < getLength(); i){
+    getButtons();
+    int length = getLength();
+    for(int i = 0; i < length; ++i){
       if(drives[i].serialNumber == button.serialNumber){
         bool mediaResult = false;
         bool acronisOnline = false;
